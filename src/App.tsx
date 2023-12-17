@@ -1,10 +1,11 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import CurrencyButton from './components/CurrencyButton';
 
 export default function App() {
   return (
     <View>
-      <Text>hello world</Text>
+      <CurrencyButton />
     </View>
   );
 }
