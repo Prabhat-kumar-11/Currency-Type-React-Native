@@ -22,6 +22,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: 'center',
   },
-  country: {fontSize: 15, color: '#41b83b', marginBottom: 4},
-  flag: {fontSize: 28, color: '#863838', marginBottom: 4},
+  country: {fontSize: 15, color: '#3939ca', marginBottom: 4},
+  flag: {fontSize: 28, color: '#801515', marginBottom: 4},
 });

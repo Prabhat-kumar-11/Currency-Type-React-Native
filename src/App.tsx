@@ -1,18 +1,32 @@
-import {SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
+// Import necessary components and libraries
+import {
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import CurrencyButton from './components/CurrencyButton';
 import Snackbar from 'react-native-snackbar';
+import {currencyByRupee} from './constants';
 
+// Define the main App component
 export default function App(): JSX.Element {
+  // State variables for input value, result value, and target currency
   const [inputValue, setInputValue] = useState('');
   const [resultValue, setResultValue] = useState('');
   const [targetCurrency, setTargetCurrency] = useState('');
 
+  // Function to handle button press for currency conversion
   const buttonPressed = (targetValue: Currency) => {
     if (!inputValue) {
       return Snackbar.show({
         text: 'Enter a value to convert',
-        backgroundColor: 'EA7773',
+        backgroundColor: '#FF6F61', // Red color for error
       });
     }
     const inputAmount = parseFloat(inputValue);
@@ -23,34 +37,59 @@ export default function App(): JSX.Element {
       setTargetCurrency(targetValue.name);
     } else {
       return Snackbar.show({
-        text: 'Not a valid number to  convert',
-        backgroundColor: 'EA7773',
+        text: 'Not a valid number to convert',
+        backgroundColor: '#FF6F61', // Red color for error
       });
     }
   };
 
+  // Return the UI components
   return (
-    <SafeAreaView>
+    <>
       <StatusBar />
 
       <View style={styles.container}>
         <View style={styles.topContainer}>
           <View style={styles.rupeesContainer}>
-            <Text style={styles.rupee}></Text>
-
+            <Text style={styles.rupee}>₹</Text>
+            <TextInput
+              maxLength={14}
+              value={inputValue}
+              clearButtonMode="always"
+              onChangeText={setInputValue}
+              style={styles.inputAmountField}
+              placeholder="Enter amount in Rupees"
+            />
           </View>
-
+          {resultValue && <Text style={styles.resultTxt}>{resultValue}</Text>}
         </View>
-      
+        <View style={styles.bottomContainer}>
+          <FlatList
+            numColumns={3}
+            data={currencyByRupee}
+            keyExtractor={item => item.name}
+            renderItem={({item}) => (
+              <Pressable
+                style={[
+                  styles.button,
+                  targetCurrency === item.name && styles.selected,
+                ]}
+                onPress={() => buttonPressed(item)}>
+                <CurrencyButton {...item} />
+              </Pressable>
+            )}
+          />
+        </View>
       </View>
-    </SafeAreaView>
+    </>
   );
 }
 
+// Define the styles for the components
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#515151',
+    backgroundColor: '#3498DB', // Sky Blue background color
   },
   topContainer: {
     flex: 1,
@@ -59,14 +98,13 @@ const styles = StyleSheet.create({
   },
   resultTxt: {
     fontSize: 32,
-    color: '#000000',
+    color: '#61ff73', // Red color for result text
     fontWeight: '800',
   },
   rupee: {
     marginRight: 8,
-
     fontSize: 22,
-    color: '#000000',
+    color: '#ca9d65', // Red color for rupee symbol
     fontWeight: '800',
   },
   rupeesContainer: {
@@ -75,23 +113,22 @@ const styles = StyleSheet.create({
   },
   inputAmountField: {
     height: 40,
+    fontSize:20,
     width: 200,
     padding: 8,
     borderWidth: 1,
     borderRadius: 4,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#ECF0F1', // Light gray background color
   },
   bottomContainer: {
     flex: 3,
   },
   button: {
     flex: 1,
-
     margin: 12,
-    height: 60,
-
+    padding: 10, // Added padding to the buttons
     borderRadius: 12,
-    backgroundColor: '#fff',
+    backgroundColor: '#FF6F61', // Red color for button
     elevation: 2,
     shadowOffset: {
       width: 1,
@@ -102,6 +139,6 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
   },
   selected: {
-    backgroundColor: '#ffeaa7',
+    backgroundColor: '#FF8C7E', // Lighter red color for selected button
   },
 });
