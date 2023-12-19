@@ -1,13 +1,47 @@
 import {SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import CurrencyButton from './components/CurrencyButton';
+import Snackbar from 'react-native-snackbar';
 
-export default function App() {
+export default function App(): JSX.Element {
+  const [inputValue, setInputValue] = useState('');
+  const [resultValue, setResultValue] = useState('');
+  const [targetCurrency, setTargetCurrency] = useState('');
+
+  const buttonPressed = (targetValue: Currency) => {
+    if (!inputValue) {
+      return Snackbar.show({
+        text: 'Enter a value to convert',
+        backgroundColor: 'EA7773',
+      });
+    }
+    const inputAmount = parseFloat(inputValue);
+    if (!isNaN(inputAmount)) {
+      const convertedValue = inputAmount * targetValue.value;
+      const result = `${targetValue.symbol} ${convertedValue.toFixed(2)}`;
+      setResultValue(result);
+      setTargetCurrency(targetValue.name);
+    } else {
+      return Snackbar.show({
+        text: 'Not a valid number to  convert',
+        backgroundColor: 'EA7773',
+      });
+    }
+  };
+
   return (
     <SafeAreaView>
       <StatusBar />
-      <View>
-        <CurrencyButton />
+
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+          <View style={styles.rupeesContainer}>
+            <Text style={styles.rupee}></Text>
+
+          </View>
+
+        </View>
+      
       </View>
     </SafeAreaView>
   );
@@ -71,5 +105,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffeaa7',
   },
 });
-
-export default App;
